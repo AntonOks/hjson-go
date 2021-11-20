@@ -1,0 +1,43 @@
+name: Build Releases
+
+on:
+  create: [push, create, workflow_dispatch]
+#    tags:
+#    - v[0-9]+.[0-9]+.[0-9]+'**'
+
+jobs:
+  build ${{ matrix.os }} release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - run: go version
+      - run: go test -v
+      - run: |
+          cd hjson-cli
+          go build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: output
+          path: hjson-cli/hjson-cli*
+          if-no-files-found: error
+  
+  release_artifacts:
+    needs: [build ubuntu-latest release, build macos-latest release, build windows-latest release]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        path: artifacts
+    uses: ncipollo/release-action@v1
+      with:
+        # ncipollo/release-action needs a tag! Either a usual "GIT TAG" or an dedicated TAG, see below!
+        tag: v1.0.1 # set a TAG if you want a release to be build on GitHub _BUT_ do not provide a GIT TAG
+        allowUpdates: true
+        artifactErrorsFailBuild: true
+        artifacts: "artifacts/output/*"
+        token: ${{ secrets.GITHUB_TOKEN }}
