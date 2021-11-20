@@ -6,7 +6,7 @@ on:
 #    - v[0-9]+.[0-9]+.[0-9]+'**'
 
 jobs:
-  build ${{ matrix.os }} release
+  build_release
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -41,3 +41,4 @@ jobs:
         artifactErrorsFailBuild: true
         artifacts: "artifacts/output/*"
         token: ${{ secrets.GITHUB_TOKEN }}
+        
