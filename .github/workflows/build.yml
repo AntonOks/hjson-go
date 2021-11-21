@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: output
-          path: hjson-cli/hjson-cli*
+          path: hjson-cli*
           if-no-files-found: error
   
   release_artifacts:
