@@ -29,7 +29,7 @@ jobs:
       - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
         run: |
           mv hjson-cli/hjson-cli.exe hjson-cli_${{ matrix.os }}.exe
-          ls -recursive
+          ls -recurse
         if: ${{ contains(matrix.os, 'windows') }}
       - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
         run: |
