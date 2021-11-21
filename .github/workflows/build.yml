@@ -24,6 +24,7 @@ jobs:
           go test -v
       - name: Build ${{ matrix.os }} hjson-cli binary
         run: |
+          mkdir binaries
           cd hjson-cli
           go build
           pwd
@@ -31,26 +32,27 @@ jobs:
       - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
         run: |
           pwd
-          mv hjson-cli/hjson-cli.exe hjson-cli_${{ matrix.os }}.exe
+          mv hjson-cli/hjson-cli.exe binaries/hjson-cli_${{ matrix.os }}.exe
+          echo " Running ls -recurse"
           ls -recurse
         if: ${{ contains(matrix.os, 'windows') }}
       - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
         run: |
           pwd
-          mv hjson-cli/hjson-cli hjson-cli_${{ matrix.os }}
+          mv hjson-cli/hjson-cli binaries/hjson-cli_${{ matrix.os }}
           ls -laR *
         if: ${{ contains(matrix.os, 'macos') }}
       - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
         run: |
           pwd
-          mv hjson-cli/hjson-cli hjson-cli_${{ matrix.os }}
+          mv hjson-cli/hjson-cli binaries/hjson-cli_${{ matrix.os }}
           ls -laR *
         if: ${{ contains(matrix.os, 'ubuntu') }}
       - name: Upload hjson-cli artifacts
         uses: actions/upload-artifact@v2
         with:
           name: output
-          path: hjson-cli*
+          path: binaries/*
           if-no-files-found: error
   
   release_artifacts:
