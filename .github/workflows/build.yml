@@ -27,13 +27,19 @@ jobs:
           cd hjson-cli
           go build
       - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
-        run: "mv hjson-cli/hjson-cli.exe hjson-cli_${{ matrix.os }}.exe"
+        run: |
+          mv hjson-cli/hjson-cli.exe hjson-cli_${{ matrix.os }}.exe
+          ls -recursive
         if: ${{ contains(matrix.os, 'windows') }}
       - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
-        run: "mv hjson-cli/hjson-cli hjson-cli_${{ matrix.os }}"
+        run: |
+          mv hjson-cli/hjson-cli hjson-cli_${{ matrix.os }}
+          ls -laR *
         if: ${{ contains(matrix.os, 'macos') }}
       - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
-        run: "mv hjson-cli/hjson-cli hjson-cli_${{ matrix.os }}"
+        run: |
+          mv hjson-cli/hjson-cli hjson-cli_${{ matrix.os }}
+          ls -laR *
         if: ${{ contains(matrix.os, 'ubuntu') }}
       - name: Upload hjson-cli artifacts
         uses: actions/upload-artifact@v2
@@ -51,7 +57,7 @@ jobs:
       with:
         path: artifacts
     - name: Show the downloaded artifacts
-      run: "la -laR"
+      run: "ls -laR *"
     - name: Release binaries
       uses: ncipollo/release-action@v1
       with:
