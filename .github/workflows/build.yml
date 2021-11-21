@@ -11,49 +11,49 @@ jobs:
   
   build_hjson-cli_releases:
     runs-on: ${{ matrix.os }}
+    
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+        
       - name: Show go infos
         run: |
           go version
           go test -v
+          
       - name: Build ${{ runner.os }} hjson-cli binary
         run: |
           mkdir binaries
           cd hjson-cli
           go build
-          pwd
-          ls
+          
       - name: Rename hjson-cli binary to reflect ${{ runner.os }}
         run: |
-          pwd
           mv hjson-cli/hjson-cli.exe binaries/hjson-cli_${{ runner.os }}.exe
-          echo " Running ls -recurse"
-          ls -recurse
         if: ${{ contains(matrix.os, 'windows') }}
+        
       - name: Rename hjson-cli binary to reflect ${{ runner.os }}
         run: |
-          pwd
           mv hjson-cli/hjson-cli binaries/hjson-cli_${{ runner.os }}
-          ls -laR *
         if: ${{ contains(matrix.os, 'macos') }}
+        
       - name: Rename hjson-cli binary to reflect ${{ runner.os }}
         run: |
-          pwd
           mv hjson-cli/hjson-cli binaries/hjson-cli_${{ runner.os }}
-          ls -laR *
         if: ${{ contains(matrix.os, 'ubuntu') }}
+        
       - name: Upload hjson-cli artifacts
         uses: actions/upload-artifact@v2
         with:
           name: output
           path: binaries/*
           if-no-files-found: error
+  
   
   release_artifacts:
     needs: [build_hjson-cli_releases]
@@ -63,10 +63,12 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         path: artifacts
+        
     - name: Show the downloaded artifacts
       run: |
         pwd
         ls -laR *
+        
     - name: Release binaries
       uses: ncipollo/release-action@v1
       with:
