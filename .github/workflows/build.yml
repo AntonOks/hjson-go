@@ -22,30 +22,30 @@ jobs:
         run: |
           go version
           go test -v
-      - name: Build ${{ matrix.os }} hjson-cli binary
+      - name: Build ${{ runner.os }} hjson-cli binary
         run: |
           mkdir binaries
           cd hjson-cli
           go build
           pwd
           ls
-      - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
+      - name: Rename hjson-cli binary to reflect ${{ runner.os }}
         run: |
           pwd
-          mv hjson-cli/hjson-cli.exe binaries/hjson-cli_${{ matrix.os }}.exe
+          mv hjson-cli/hjson-cli.exe binaries/hjson-cli_${{ runner.os }}.exe
           echo " Running ls -recurse"
           ls -recurse
         if: ${{ contains(matrix.os, 'windows') }}
-      - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
+      - name: Rename hjson-cli binary to reflect ${{ runner.os }}
         run: |
           pwd
-          mv hjson-cli/hjson-cli binaries/hjson-cli_${{ matrix.os }}
+          mv hjson-cli/hjson-cli binaries/hjson-cli_${{ runner.os }}
           ls -laR *
         if: ${{ contains(matrix.os, 'macos') }}
-      - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
+      - name: Rename hjson-cli binary to reflect ${{ runner.os }}
         run: |
           pwd
-          mv hjson-cli/hjson-cli binaries/hjson-cli_${{ matrix.os }}
+          mv hjson-cli/hjson-cli binaries/hjson-cli_${{ runner.os }}
           ls -laR *
         if: ${{ contains(matrix.os, 'ubuntu') }}
       - name: Upload hjson-cli artifacts
