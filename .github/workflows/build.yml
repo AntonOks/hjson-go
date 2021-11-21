@@ -26,18 +26,23 @@ jobs:
         run: |
           cd hjson-cli
           go build
+          pwd
+          ls
       - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
         run: |
+          pwd
           mv hjson-cli/hjson-cli.exe hjson-cli_${{ matrix.os }}.exe
           ls -recurse
         if: ${{ contains(matrix.os, 'windows') }}
       - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
         run: |
+          pwd
           mv hjson-cli/hjson-cli hjson-cli_${{ matrix.os }}
           ls -laR *
         if: ${{ contains(matrix.os, 'macos') }}
       - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
         run: |
+          pwd
           mv hjson-cli/hjson-cli hjson-cli_${{ matrix.os }}
           ls -laR *
         if: ${{ contains(matrix.os, 'ubuntu') }}
@@ -57,7 +62,9 @@ jobs:
       with:
         path: artifacts
     - name: Show the downloaded artifacts
-      run: "ls -laR *"
+      run: |
+        pwd
+        ls -laR *
     - name: Release binaries
       uses: ncipollo/release-action@v1
       with:
