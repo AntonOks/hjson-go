@@ -1,17 +1,14 @@
-name: Build Releases
+name: Build hjson-cli Releases
 
 on:
   push:
     branches: [ master, actiouns_build ]
     tags:
       - v[0-9]+.[0-9]+.[0-9]+'**'
-      
-#  create: [push, create, workflow_dispatch]
-#    tags:
-#    - v[0-9]+.[0-9]+.[0-9]+'**'
+  workflow_dispatch:
 
 jobs:
-  build_release:
+  build_hjson-cli_release:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -21,10 +18,21 @@ jobs:
       - uses: actions/checkout@v2
       - run: go version
       - run: go test -v
-      - run: |
+      - name: Build ${{ matrix.os }} hjson-cli binary
+        run: |
           cd hjson-cli
           go build
-      - name: Upload artifacts
+      - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
+        run: "mv hjson-cli/hjson-cli.exe hjson-cli_${{ matrix.os }}.exe"
+        if: ${{ contains(matrix.os, 'windows') }}
+      - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
+        run: "mv hjson-cli/hjson-cli hjson-cli_${{ matrix.os }}"
+        if: ${{ contains(matrix.os, 'macos') }}
+      - name: Rename hjson-cli binary to reflect ${{ matrix.os }}
+        run: "mv hjson-cli/hjson-cli hjson-cli_${{ matrix.os }}"
+        if: ${{ contains(matrix.os, 'ubuntu') }}
+
+      - name: Upload hjson-cli artifacts
         uses: actions/upload-artifact@v2
         with:
           name: output
@@ -32,7 +40,7 @@ jobs:
           if-no-files-found: error
   
   release_artifacts:
-    needs: [build_release]
+    needs: [build_hjson-cli_release]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/download-artifact@v2
@@ -41,7 +49,9 @@ jobs:
     - uses: ncipollo/release-action@v1
       with:
         # ncipollo/release-action needs a tag! Either a usual "GIT TAG" or an dedicated TAG, see below!
-        tag: v1.0.1 # set a TAG if you want a release to be build on GitHub _BUT_ do not provide a GIT TAG
+        # set a TAG if you want to build a release, i.e. via "workflow_dispatch" on GitHub _AND_ do not push a regular GIT TAG
+        # and the other way around, if you want to build releases based on pushed GIT TAGs, make sure you un-comment the "tag:" line below!
+        tag: v3.1.0 
         allowUpdates: true
         artifactErrorsFailBuild: true
         artifacts: "artifacts/output/*"
