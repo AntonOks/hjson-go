@@ -18,13 +18,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-      
-      - name: Show go infos
-        run: |
-          go version
-          go test -v
           
-      - name: Build ${{ runner.os }} hjson-cli binary
+      - name: Build the ${{ runner.os }} hjson-cli binary
         run: |
           mkdir binaries
           cd hjson-cli
@@ -32,12 +27,12 @@ jobs:
           
       - name: Rename hjson-cli binary to reflect ${{ runner.os }}
         run: |
-          mv hjson-cli/hjson-cli.exe binaries/hjson-cli_${{ runner.os }}.exe
+          mv hjson-cli/hjson-cli.exe binaries/hjson-cli_${{ github.ref_name }}_${{ runner.os }}.exe
         if: ${{ contains(matrix.os, 'windows') }}
         
       - name: Rename hjson-cli binary to reflect ${{ runner.os }}
         run: |
-          mv hjson-cli/hjson-cli binaries/hjson-cli_${{ runner.os }}
+          mv hjson-cli/hjson-cli binaries/hjson-cli_${{ github.ref_name }}_${{ runner.os }}
         if: runner.os != 'Windows'
         
       - name: Upload hjson-cli artifacts
