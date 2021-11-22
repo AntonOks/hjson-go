@@ -19,7 +19,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
         
-      - name: Set the "git tag" as the RELEASE_VERSION env variable 
+      - name: Set the git_tag as the RELEASE_VERSION env variable 
         run: |
           echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
           echo $RELEASE_VERSION
@@ -74,7 +74,7 @@ jobs:
         # ncipollo/release-action needs a tag! Either a usual "GIT TAG" or an dedicated TAG, see below!
         # set a TAG if you want to build a release, i.e. via "workflow_dispatch" on GitHub _AND_ do not push a regular GIT TAG
         # and the other way around, if you want to build releases based on pushed GIT TAGs, make sure you un-comment the "tag:" line below!
-        tag: v3.1.0 
+        tag: $RELEASE_VERSION 
         allowUpdates: true
         artifactErrorsFailBuild: true
         artifacts: "artifacts/output/*"
