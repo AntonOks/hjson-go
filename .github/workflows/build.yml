@@ -3,7 +3,7 @@ name: Build hjson-cli Releases
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*.*.*'
 
 jobs:
   
@@ -74,7 +74,7 @@ jobs:
         # ncipollo/release-action needs a tag! Either a usual "GIT TAG" or an dedicated TAG, see below!
         # set a TAG if you want to build a release, i.e. via "workflow_dispatch" on GitHub _AND_ do not push a regular GIT TAG
         # and the other way around, if you want to build releases based on pushed GIT TAGs, make sure you un-comment the "tag:" line below!
-        tag: $RELEASE_VERSION 
+        tag: ${{ github.ref_name }} 
         allowUpdates: true
         artifactErrorsFailBuild: true
         artifacts: "artifacts/output/*"
