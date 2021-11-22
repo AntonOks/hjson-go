@@ -2,10 +2,8 @@ name: Build hjson-cli Releases
 
 on:
   push:
-    branches: [ master, actiouns_build ]
     tags:
       - v[0-9]+.[0-9]+.[0-9]'**'
-  workflow_dispatch:
 
 jobs:
   
@@ -40,12 +38,7 @@ jobs:
       - name: Rename hjson-cli binary to reflect ${{ runner.os }}
         run: |
           mv hjson-cli/hjson-cli binaries/hjson-cli_${{ runner.os }}
-        if: ${{ contains(matrix.os, 'macos') }}
-        
-      - name: Rename hjson-cli binary to reflect ${{ runner.os }}
-        run: |
-          mv hjson-cli/hjson-cli binaries/hjson-cli_${{ runner.os }}
-        if: ${{ contains(matrix.os, 'ubuntu') }}
+        if: runner.os != 'Windows'
         
       - name: Upload hjson-cli artifacts
         uses: actions/upload-artifact@v2
